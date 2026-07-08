@@ -114,10 +114,10 @@ def main():
 
     readme = open("README.md").read()
     readme = re.sub(
-        r"^rev: .*",
-        lambda _: f"rev: {ver}", cfg, flags=re.MULTILINE,
+        r"^(\s*)rev: .*",
+        lambda m: f"{m[1]}rev: {ver}", readme, flags=re.MULTILINE,
     )
-    open("README.md").write(readme)
+    open("README.md", "w").write(readme)
 
     if gh_env := os.environ.get("GITHUB_ENV"):
         with open(gh_env, "a") as f:
