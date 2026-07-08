@@ -73,6 +73,10 @@ def sha256(url):
 def main():
     rel = api(f"https://api.github.com/repos/{REPO}/releases")[0]
     tag = rel["tag_name"]
+    m = re.search(r"(\d+)\.(\d+)-(\d+)", tag)
+    if not m:
+        raise SystemExit(f"cannot derive PEP 440 version from tag {tag!r}")
+    ver = f"{m[1]}.{m[2]}.{m[3]}"
     assets = {a["name"]: a for a in rel["assets"]}
 
     lines = []
@@ -104,13 +108,20 @@ def main():
 
     cfg = re.sub(
         r"^version = .*",
-        lambda _: f"version = {tag}", cfg, flags=re.MULTILINE,
+        lambda _: f"version = {ver}", cfg, flags=re.MULTILINE,
     )
     open("setup.cfg", "w").write(cfg)
 
+    readme = open("README.md").read()
+    readme = re.sub(
+        r"^rev: .*",
+        lambda _: f"rev: {ver}", cfg, flags=re.MULTILINE,
+    )
+    open("README.md").write(readme)
+
     if gh_env := os.environ.get("GITHUB_ENV"):
         with open(gh_env, "a") as f:
-            f.write(f"VERIBLE_VERSION={tag}\n")
+            f.write(f"VERIBLE_VERSION={ver}\n")
 
 
 if __name__ == "__main__":
