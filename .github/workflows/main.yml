@@ -2,31 +2,29 @@ name: main
 
 on:
   push:
-    branches: [main, test-me-*]
-    tags: '*'
+    branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  main-windows:
-    uses: asottile/workflows/.github/workflows/tox.yml@v1.8.1
-    with:
-      env: '["py310"]'
-      os: windows-latest
-      wheel-tags: true
-  main-macos:
-    uses: asottile/workflows/.github/workflows/tox.yml@v1.8.1
-    with:
-      env: '["py310"]'
-      os: macos-latest
-      wheel-tags: true
-  main-macos-intel:
-    uses: asottile/workflows/.github/workflows/tox.yml@v1.8.1
-    with:
-      env: '["py310"]'
-      os: macos-15-intel
-      wheel-tags: true
-  main-linux:
-    uses: asottile/workflows/.github/workflows/tox.yml@v1.8.1
-    with:
-      env: '["py310"]'
-      os: ubuntu-latest
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pre-commit
+        run: pip install pre-commit
+      - name: Run the hooks against a sample file
+        shell: bash
+        run: |
+          printf 'module m;\nendmodule\n' > sample.sv
+          pre-commit try-repo . verible-verilog-lint --files sample.sv
+          pre-commit try-repo . verible-verilog-format --files sample.sv

@@ -1,0 +1,37 @@
+name: tag-on-merge
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write             # to push the tag
+
+jobs:
+  tag:
+    if: >
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.ref == 'update-verible'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: 0
+
+      - name: Read version from setup.cfg
+        id: v
+        run: |
+          TAG=$(python -c "import configparser;c=configparser.ConfigParser();c.read('setup.cfg');print(c['metadata']['version'])")
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag if absent
+        env:
+          TAG: ${{ steps.v.outputs.tag }}
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "$TAG already exists, skipping."
+            exit 0
+          fi
+          git tag -a "$TAG" -m "$TAG" "${{ github.event.pull_request.merge_commit_sha }}"
+          git push origin "$TAG"

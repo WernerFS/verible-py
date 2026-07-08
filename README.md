@@ -1,36 +1,24 @@
-[![build status](https://github.com/shellcheck-py/shellcheck-py/actions/workflows/main.yml/badge.svg)](https://github.com/shellcheck-py/shellcheck-py/actions/workflows/main.yml)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/shellcheck-py/shellcheck-py/main.svg)](https://results.pre-commit.ci/latest/github/shellcheck-py/shellcheck-py/main)
+# verible-py pre-commit hook
 
-# shellcheck-py
+[![main](https://github.com/WernerFS/verible-py/actions/workflows/main.yml/badge.svg)](https://github.com/WernerFS/verible-py/actions/workflows/main.yml)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/WernerFS/verible-py/main.svg)](https://results.pre-commit.ci/latest/github/WernerFS/verible-py/main)
 
-A python wrapper to provide a pip-installable [shellcheck] binary.
+To be used for linting and formatting verilog and system-verilog with [verible] using pre-commit.
 
-Internally this package provides a convenient way to download the pre-built
-shellcheck binary for your particular platform.
-
-### installation
-
-```bash
-pip install shellcheck-py
-```
-
-### usage
-
-After installation, the `shellcheck` binary should be available in your
-environment (or `shellcheck.exe` on windows).
-
-### As a pre-commit hook
+## Usage
 
 See [pre-commit] for instructions
 
 Sample `.pre-commit-config.yaml`:
 
 ```yaml
--   repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.11.0.1
+-   repo: https://github.com/WernerFS/verible-py.git
+    rev: v0.0-4080-ga0a8d8eb
     hooks:
-    -   id: shellcheck
+      - id: verible-verilog-format
+        args: [--inplace]
+      - id: verible-verilog-lint
 ```
 
-[shellcheck]: https://shellcheck.net
+[verible]: https://chipsalliance.github.io/verible/
 [pre-commit]: https://pre-commit.com

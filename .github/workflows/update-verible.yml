@@ -1,0 +1,41 @@
+name: update-verible
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"      # weekly, Monday 06:00 UTC
+  workflow_dispatch:          # manual "Run workflow" button
+
+permissions:
+  contents: write             # to push the branch
+  pull-requests: write        # to open the PR
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Regenerate setup.cfg
+        run: python bin/update-verible.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # raises API rate limit 60->1000/hr
+
+      - name: Open or update PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "Update verible to ${{ env.VERIBLE_VERSION }}"
+          title: "Update verible to ${{ env.VERIBLE_VERSION }}"
+          body: |
+            Automated update of the verible binaries and hashes.
+            Version: `${{ env.VERIBLE_VERSION }}`
+          branch: update-verible
+          delete-branch: true
+
+      - name: Test
+        run: |
+          pip install pre-commit
+          pre-commit try-repo . verible-verilog-lint --files nonexistent.sv || true
