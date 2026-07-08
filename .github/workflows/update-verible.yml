@@ -20,12 +20,12 @@ jobs:
           python-version: "3.12"
 
       - name: Regenerate setup.cfg
-        run: python bin/update-verible.py
+        run: python scripts/update-verible.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # raises API rate limit 60->1000/hr
 
       - name: Open or update PR
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v7WW
         with:
           commit-message: "Update verible to ${{ env.VERIBLE_VERSION }}"
           title: "Update verible to ${{ env.VERIBLE_VERSION }}"
