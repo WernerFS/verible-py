@@ -25,7 +25,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # raises API rate limit 60->1000/hr
 
       - name: Open or update PR
-        uses: peter-evans/create-pull-request@v7WW
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "Update verible to ${{ env.VERIBLE_VERSION }}"
           title: "Update verible to ${{ env.VERIBLE_VERSION }}"
