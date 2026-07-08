@@ -34,8 +34,3 @@ jobs:
             Version: `${{ env.VERIBLE_VERSION }}`
           branch: update-verible
           delete-branch: true
-
-      - name: Test
-        run: |
-          pip install pre-commit
-          pre-commit try-repo . verible-verilog-lint --files nonexistent.sv || true

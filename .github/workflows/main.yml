@@ -25,6 +25,6 @@ jobs:
       - name: Run the hooks against a sample file
         shell: bash
         run: |
-          printf 'module m;\nendmodule\n' > sample.sv
+          printf 'module sample;\nendmodule\n' > sample.sv
           pre-commit try-repo . verible-verilog-lint --files sample.sv
           pre-commit try-repo . verible-verilog-format --files sample.sv
