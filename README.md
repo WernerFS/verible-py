@@ -22,3 +22,7 @@ Sample `.pre-commit-config.yaml`:
 
 [verible]: https://chipsalliance.github.io/verible/
 [pre-commit]: https://pre-commit.com
+
+## Acknowledgements
+
+This project was heavily inspired by the [IMC-verible-py repository](https://github.com/imc-trading/verible-py) by Mark Korondi [@kmARK](https://github.com/kmARC).
