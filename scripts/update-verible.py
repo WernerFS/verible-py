@@ -47,9 +47,12 @@ PLATFORMS = (
         "asset": "macOS.tar.gz",
         "extract": "tar",
         "suffix": "",
-        "archive_root": "verible-{tag}",
+        "archive_root": "verible-{tag}-macOS",
         "bindir": "bin/",
-        "markers": ('sys_platform == "darwin"',),
+        "markers": (
+            'sys_platform == "darwin" and platform_machine == "x86_64"',
+            'sys_platform == "darwin" and platform_machine == "arm64"',
+        ),
     },
 )
 
