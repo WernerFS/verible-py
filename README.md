@@ -13,7 +13,7 @@ Sample `.pre-commit-config.yaml`:
 
 ```yaml
 -   repo: https://github.com/WernerFS/verible-py.git
-    rev: 0.0.4080
+    rev: 0.0.4084
     hooks:
       - id: verible-verilog-format
         args: [--inplace]
